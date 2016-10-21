@@ -14,8 +14,9 @@ module.exports= {
     }
   },
   Mutation: {
-    addTask(_) {
-     return "vinh"
+    addTask(_,{name}) {
+      Tasks.insert({name:name})
+      return Tasks.find({}).fetch();
    },
  }
 };

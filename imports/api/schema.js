@@ -8,7 +8,7 @@ type Query {
 },
 
 type Mutation {
-  addTask: String,
+  addTask(name:String): [Name],
 },
 schema {
   query: Query,

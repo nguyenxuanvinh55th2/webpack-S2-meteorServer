@@ -18,5 +18,10 @@ module.exports= {
       Tasks.insert({name:name})
       return Tasks.find({}).fetch();
    },
+   addRegister(_,{email,pass}){
+     let us ={email: email, password: pass}
+    //Accounts.createUser(us)
+     return true;
+   }
  }
 };

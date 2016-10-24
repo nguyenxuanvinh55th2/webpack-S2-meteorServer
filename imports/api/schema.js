@@ -9,6 +9,7 @@ type Query {
 
 type Mutation {
   addTask(name:String): [Name],
+  addRegister(email: String, pass: String):Boolean
 },
 schema {
   query: Query,

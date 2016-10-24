@@ -3,8 +3,7 @@ type Name {
   name:String
 }
 type Query {
-  hello(userId:String): Name,
-  vinh:String
+  hello(user:String): [Name]
 },
 
 type Mutation {

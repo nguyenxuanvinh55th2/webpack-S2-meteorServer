@@ -12,6 +12,7 @@
     "graphql": "^0.7.2",
     "graphql-tag": "^0.1.14",
     "graphql-tools": "^0.7.2",
-    "meteor-node-stubs": "~0.2.0"
+    "meteor-node-stubs": "~0.2.0",
+    "subscriptions-transport-ws": "^0.3.0"
   }
 }

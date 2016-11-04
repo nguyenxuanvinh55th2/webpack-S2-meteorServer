@@ -2,7 +2,7 @@ import { Tasks } from './task';
 module.exports= {
   Query: {
      hello(root,{user}) {
-       console.log(user);
+      //  console.log(user);
       return  Tasks.find({}).fetch();
     }
   },
@@ -15,6 +15,11 @@ module.exports= {
      let us ={email: email, password: pass}
     //Accounts.createUser(us)
      return true;
+   }
+ },
+ Subscription:{
+   showTast(_){
+     return "vinh";
    }
  }
 };

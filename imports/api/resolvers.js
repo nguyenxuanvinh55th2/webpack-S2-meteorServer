@@ -1,25 +1,28 @@
-import { Tasks } from './task';
-module.exports= {
+import { find, filter } from 'lodash';
+import { pubsub } from './subscription';
+import {Posts} from './post'
+
+const resolveFunctions = {
   Query: {
-     hello(root,{user}) {
-      //  console.log(user);
-      return  Tasks.find({}).fetch();
+    posts() {
+      return Posts.find({}).fetch();
     }
   },
   Mutation: {
-    addTask(_,{name}) {
-      Tasks.insert({name:name})
-      return Tasks.find({}).fetch();
-   },
-   addRegister(_,{email,pass}){
-     let us ={email: email, password: pass}
-    //Accounts.createUser(us)
-     return true;
-   }
- },
- Subscription:{
-   showTast(_){
-     return "vinh";
-   }
- }
+    upvotePost(_, { postId,vote }) {
+      Posts.update({_id:postId}, {$set:{
+        votes:vote
+      }});
+      var post = Posts.findOne({_id:postId});
+      pubsub.publish('postUpvoted', post);
+      return post;
+    },
+  },
+  Subscription: {
+    postUpvoted(post) {
+      return post;
+    },
+  }
 };
+
+export default resolveFunctions;

@@ -1,26 +1,50 @@
 import { Meteor } from 'meteor/meteor';
+import express from 'express';
+import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import { createServer } from 'http';
+import { SubscriptionServer,Server } from 'subscriptions-transport-ws';
+import { printSchema } from 'graphql/utilities/schemaPrinter';
 
+import  '../imports/api/task'
+import '../imports/api/post'
+
+import { subscriptionManager } from '../imports/api/subscription';
+import schema from '../imports/api/schema';
+import createApolloClient from '../imports/create-apollo-client'
 import { createApolloServer } from 'meteor/apollo';
-import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
+const GRAPHQL_PORT = 8080;
+const WS_PORT = 8090;
 
-import typeDefs from '../imports/api/schema';
-import resolvers from '../imports/api/resolvers';
+const graphQLServer = express().use('*', cors());
 
-import { PubSub, SubscriptionManager } from 'graphql-subscriptions';
-//collection
-// import { User } from '../imports/api/user'
-import '../imports/api/task'
-const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers,
+graphQLServer.use('/graphql', bodyParser.json(), graphqlExpress({
+  schema,
+  context: {},
+}));
+
+graphQLServer.use('/graphiql', graphiqlExpress({
+  endpointURL: '/graphql',
+}));
+
+graphQLServer.listen(GRAPHQL_PORT, () => console.log(
+  `GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}/graphql`
+));
+
+// WebSocket server for subscriptions
+const websocketServer = createServer((request, response) => {
+  response.writeHead(404);
+  response.end();
 });
 
-createApolloServer({
-  schema,
-});
+websocketServer.listen(WS_PORT, () => console.log( // eslint-disable-line no-console
+  `Websocket Server is now running on http://localhost:${WS_PORT}`
+));
 
-const pubsub = new PubSub();
-new SubscriptionManager({
-  schema,
-  pubsub
-})
+
+// eslint-disable-next-line
+new SubscriptionServer(
+  { subscriptionManager },
+  websocketServer
+);

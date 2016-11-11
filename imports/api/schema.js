@@ -5,14 +5,24 @@ import resolvers from './resolvers';
 const schema = [`
   type Post {
     _id:String
-    title: String
-    author: String
-    votes: Int
+    caption:String
+    likes: Int
+    display_src: String
+    comments: [Comment]
   }
-
+  type User {
+    _id:String
+    address:String
+  }
+  type Comment {
+    _id: String
+    text:String
+    userId:String
+    user:User
+  }
   # the schema allows the following query:
   type Query {
-    posts: [Post]
+    posts(userId:String): [Post]
   }
 
   # this schema allows the following mutation:
@@ -21,7 +31,7 @@ const schema = [`
   }
 
   type Subscription {
-    postUpvoted: Post
+    postUpvoted  (author:String): Post
   }
   schema {
     query: Query

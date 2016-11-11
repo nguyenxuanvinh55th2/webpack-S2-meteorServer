@@ -1,11 +1,12 @@
-import { find, filter } from 'lodash';
 import { pubsub } from './subscription';
 import {Posts} from './post'
-
+import {Comments} from './comments'
+import {Meteor} from 'meteor/meteor'
+import __ from 'lodash'
 const resolveFunctions = {
   Query: {
-    posts() {
-      return Posts.find({}).fetch();
+    posts(_,{userId}) {
+      return Posts.find({"userId":userId}).fetch();
     }
   },
   Mutation: {
@@ -14,7 +15,7 @@ const resolveFunctions = {
         votes:vote
       }});
       var post = Posts.findOne({_id:postId});
-      pubsub.publish('postUpvoted', post);
+      //pubsub.publish('postUpvoted', post);
       return post;
     },
   },
@@ -22,6 +23,18 @@ const resolveFunctions = {
     postUpvoted(post) {
       return post;
     },
+  },
+  Post :{
+    comments(root){
+      return Comments.find({"postId":root._id}).fetch();
+    }
+  },
+  Comment :{
+    async  user(root){
+      // console.log(root.userId,Meteor.users.find({"_id":root.userId}).fetch());
+
+      return await Meteor.users.findOne({"_id":root.userId});
+    }
   }
 };
 

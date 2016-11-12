@@ -27,7 +27,9 @@ const schema = [`
 
   # this schema allows the following mutation:
   type Mutation {
-    upvotePost (postId: String,vote:Int): Post
+    upvotePost (postId: String,vote:Int): Post,
+    insertPost(caption: String,display_src:String): String,
+    updateLikePost (postId:String):String
   }
 
   type Subscription {

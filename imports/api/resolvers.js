@@ -18,6 +18,22 @@ const resolveFunctions = {
       //pubsub.publish('postUpvoted', post);
       return post;
     },
+    insertPost(_,{caption,display_src}){
+      var ob ={
+        caption:caption,
+        display_src:display_src,
+        "userId" : "aXbY62cox9MiF4vAN",
+        "likes" :0,
+      };
+      Posts.insert(ob);
+
+    },
+    updateLikePost(_,{postId}){
+      Posts.update({_id:postId}, {$inc:{
+          likes:1
+      }});
+      return ;
+    }
   },
   Subscription: {
     postUpvoted(post) {

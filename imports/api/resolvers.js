@@ -20,18 +20,23 @@ const resolveFunctions = {
     },
     insertPost(_,{caption,display_src}){
       var ob ={
+        _id: (Math.floor(Math.random()*90000) + 10000).toString(),
         caption:caption,
         display_src:display_src,
         "userId" : "aXbY62cox9MiF4vAN",
         "likes" :0,
       };
-      Posts.insert(ob);
+      Posts.insert(ob,()=>{
+        pubsub.publish('subscriptPost',ob)
+      });
 
     },
     updateLikePost(_,{postId}){
       Posts.update({_id:postId}, {$inc:{
           likes:1
-      }});
+      }},()=>{
+        pubsub.publish('subscriptPost',Posts.findOne({_id:postId}))
+      });
       return ;
     }
   },
@@ -39,6 +44,9 @@ const resolveFunctions = {
     postUpvoted(post) {
       return post;
     },
+    subscriptPost(post) {
+      return post;
+    }
   },
   Post :{
     comments(root){

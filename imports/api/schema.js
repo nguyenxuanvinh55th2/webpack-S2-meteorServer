@@ -33,7 +33,8 @@ const schema = [`
   }
 
   type Subscription {
-    postUpvoted  (author:String): Post
+    postUpvoted  (author:String): Post,
+    subscriptPost : Post
   }
   schema {
     query: Query

@@ -29,7 +29,8 @@ const schema = [`
   type Mutation {
     upvotePost (postId: String,vote:Int): Post,
     insertPost(caption: String,display_src:String): String,
-    updateLikePost (postId:String):String
+    updateLikePost (postId:String):String,
+    deletePost(postId:String):String
   }
 
   type Subscription {

@@ -38,6 +38,15 @@ const resolveFunctions = {
         pubsub.publish('subscriptPost',Posts.findOne({_id:postId}))
       });
       return ;
+    },
+    deletePost(_,{postId}){
+      let post = Posts.findOne({_id:postId});
+
+      Posts.remove({"_id":postId},()=>{
+        Comments.remove({postId:postId});
+        pubsub.publish('subscriptPost',post);
+      });
+      return;
     }
   },
   Subscription: {
